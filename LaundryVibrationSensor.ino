@@ -36,7 +36,6 @@ void setup() {
   setupOTA();
   setupMqtt();
 
-  pinMode(LED_BUILTIN, OUTPUT);
   pinMode(SensorPin, INPUT);
   attachInterrupt(digitalPinToInterrupt(SensorPin), vibrationDetected, FALLING);
 
@@ -67,10 +66,6 @@ void loop() {
     Serial.print("****** vibration: ");
     Serial.println(vibrationCounter);
     pubSubClient.publish(MQTT_CLIENT_NAME"/vibration", String(vibrationCounter).c_str());
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(1000);
-  } else {
-    digitalWrite(LED_BUILTIN, HIGH);
   }
 
 
