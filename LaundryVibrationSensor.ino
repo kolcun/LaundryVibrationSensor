@@ -76,7 +76,7 @@ void loop() {
 
 }
 
-//Interrupts function
+//Interrupt function
 void vibrationDetected() {
   vibrationState++;
   vibrationCounter++;
@@ -167,8 +167,6 @@ void reconnect() {
           pubSubClient.publish(overwatchTopic, "Reconnected");
         }
         //MQTT Subscriptions
-        pubSubClient.subscribe(MQTT_CLIENT_NAME"/mike/set");
-        pubSubClient.subscribe(MQTT_CLIENT_NAME"/diane/set");
       } else {
         Serial.print("failed, rc=");
         Serial.print(pubSubClient.state());
