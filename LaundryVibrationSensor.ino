@@ -47,21 +47,25 @@ void loop() {
   unsigned long currentMillis = millis();
 
   if (enoughTimeElapsedSinceSeeingAVibration(currentMillis) && vibrationCountOverThreshold()) {
-        Serial.print("time passed since vibration, vibrations: ");
+        Serial.print("time passed since vibration, vibration counter: ");
         Serial.println(vibrationCounter);
         vibrationCounter=0;
         resetTimeSinceVibration(currentMillis);
         pubSubClient.publish(MQTT_CLIENT_NAME"/state", "complete");
   }
   
-  if (vibrationState != 0) {
+  if (seenAnyVibration()) {
     vibrationState = 0;
     resetTimeSinceVibration(currentMillis);
-    Serial.print("****** vibration: ");
+    Serial.print("vibration occured: ");
     Serial.println(vibrationCounter);
     pubSubClient.publish(MQTT_CLIENT_NAME"/vibration", String(vibrationCounter).c_str());
   }
 
+}
+
+bool seenAnyVibration(){
+  return vibrationState != 0;
 }
 
 void resetTimeSinceVibration(long currentMillis){
