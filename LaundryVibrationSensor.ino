@@ -13,7 +13,6 @@
 #define SensorPin D6
 unsigned char vibrationState = 0;
 unsigned long vibrationCounter = 0;
-bool vibration = false;
 void ICACHE_RAM_ATTR vibrationDetected();
 unsigned long previousMillis = 0;
 const long interval = 1000 * 5;
@@ -52,18 +51,15 @@ void loop() {
   unsigned long currentMillis = millis();
 
   if (currentMillis - previousMillis >= interval) {
-    if (vibration) {
       if (vibrationCounter >= vibrationThreshold) {
         Serial.print("time passed since vibration, vibrations: ");
         Serial.println(vibrationCounter);
         vibrationCounter=0;
-        vibration = false;
         previousMillis = currentMillis;
         pubSubClient.publish(MQTT_CLIENT_NAME"/state", "vibration stopped");
       } else {
         previousMillis = currentMillis;
       }
-    }
   }
   if (vibrationState != 0) {
     vibrationState = 0;
@@ -83,7 +79,6 @@ void loop() {
 //Interrupts function
 void vibrationDetected() {
   vibrationState++;
-  vibration = true;
   vibrationCounter++;
 }
 
