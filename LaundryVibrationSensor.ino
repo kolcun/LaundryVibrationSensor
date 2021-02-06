@@ -32,13 +32,10 @@ PubSubClient pubSubClient(wifiClient);
 void setup() {
   Serial.begin(115200);
   Serial.println("Booting");
-
   setupOTA();
   setupMqtt();
-
   pinMode(SensorPin, INPUT);
   attachInterrupt(digitalPinToInterrupt(SensorPin), vibrationDetected, FALLING);
-
 }
 
 void loop() {
@@ -49,16 +46,12 @@ void loop() {
   pubSubClient.loop();
   unsigned long currentMillis = millis();
 
-  if (currentMillis - previousMillis >= interval) {
-      if (vibrationCounter >= vibrationThreshold) {
+  if (enoughTimeElapsed(currentMillis) && vibrationsOverThreshold()) {
         Serial.print("time passed since vibration, vibrations: ");
         Serial.println(vibrationCounter);
         vibrationCounter=0;
         previousMillis = currentMillis;
         pubSubClient.publish(MQTT_CLIENT_NAME"/state", "vibration stopped");
-      } else {
-        previousMillis = currentMillis;
-      }
   }
   if (vibrationState != 0) {
     vibrationState = 0;
@@ -69,6 +62,14 @@ void loop() {
   }
 
 
+}
+
+bool enoughTimeElapsed(long currentMillis){
+  return currentMillis - previousMillis >= interval;
+}
+
+bool vibrationsOverThreshold() {
+  return vibrationCounter >= vibrationThreshold;
 }
 
 //Interrupt function
