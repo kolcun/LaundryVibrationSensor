@@ -15,9 +15,9 @@ unsigned char vibrationState = 0;
 unsigned long vibrationCounter = 0;
 void ICACHE_RAM_ATTR vibrationDetected();
 unsigned long previousMillis = 0;
-const long interval = 1000 * 5;
-const long vibrationThreshold = 500; // at least this many vibrations must happen before we call it
-//todo, enough bumps, etc and this will probably kick off a notification - maybe reset the counter every 5 minuts if it's not changed?
+const long interval = 1000 * 30; //wait this long after vibrations stop before calling it stopped
+const long vibrationThreshold = 1000; // at least this many vibrations must happen before we start our timer
+//TODO  with enough bumps, say loading/unloading - this will probably kick off a notification - maybe reset the counter every 5 minuts if it's not changed?
 
 const char* ssid = WIFI_SSID;
 const char* password = WIFI_PASSWD;
